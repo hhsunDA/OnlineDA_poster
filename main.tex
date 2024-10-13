@@ -13,13 +13,13 @@
 % ====================
 
 \usepackage[utf8]{inputenc}
-
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usepackage{wrapfig,lipsum}
 \usepackage{cleveref}
+\usepackage{subcaption}
 
 
 % \usepackage{sidecap}
@@ -56,13 +56,11 @@
 % ====================
 % Footer (optional)
 % ====================
-
-% \footercontent{
-% 	AERSS Conference 2023, Wuhan, China \hfill
-% 	\insertdate \hfill
-% 	\href{mailto:myemail@exampl.com}{\texttt{juhaoxing@qq.com}}
-% }
-% (can be left out to remove footer)
+\footercontent{
+	ICDM workshop 2024, Nanjing, China \hfill
+	\insertdate \hfill
+	\href{https://hhsunda.github.io/}{\texttt{hhsun@smail.nju.edu.cn}}
+}
 
 % ====================
 % My own customization
@@ -73,234 +71,185 @@
 \input{custom-defs.tex}
 
 %% Reference Sources
-\addbibresource{references.bib}
+\addbibresource{CFR.bib}
+\addbibresource{DA_theory.bib}
 \renewcommand{\pgfuseimage}[1]{\includegraphics[scale=2]{#1}}
 
-\title{A correlation-based selection of VOCs for emission estimates in Yangtze River Delta}
+\title{An Online Paleoclimate Data Assimilation with a Deep Learning-based Network}
 
-\author{Haoxing Ju \inst{1} \and Lili Lei \inst{1} \and Zhen Peng \inst{1}}
+\author{Haohao Sun \inst{1} \and Lili Lei \inst{1} \and Zhengyu Liu \inst{2} \and Liang Ning \inst{3} \and Zhe-Min Tan \inst{1}}
 
-\institute[shortinst]{\inst{1} School of Atmospheric Sciences, Nanjing University, Nanjing, China} 
-% \samelineand \inst{2} Another Institute}
+\institute[shortinst]{
+    \inst{1} School of Atmospheric Sciences, Nanjing University, Nanjing \\
+    \inst{2} Department of Geography, The Ohio State University, Columbus, Ohio \\
+    \inst{3} School of Geography, Nanjing Normal University, Nanjing
+}
 
-% \date{January 01, 2023}
+\date{October 17, 2024}
 
 \begin{document}
 \setbeamercolor{background canvas}{bg=lightgray}
-\begin{frame}[t]
-	\begin{columns}
-    	\begin{column}{2\colwidth+\sepwidth}
-    	\begin{block}{Introduction}
-    		
-            Volatile organic compounds (VOCs) have been listed by China's Ministry of Ecology and Environment (MEE) as key pollutants to be controlled in the series plans since 2013, for they play important roles in 
-            the formation of other pollutants, such as secondary PM\textsubscript{2.5} and troposphere O\textsubscript{3}. In most Chemical Transport Model (CTM), errors in emissions could have even larger impacts on forecast than initial conditions(IC)\parencite{Sandu_2011}, and the uncertainty of VOC emissions can reach up to 78\% \parencite{Li_2017}. Thus, it can be expected that a better estimation of VOC emissions could help to improve CTM forecast results. \\
-            
-            \sepnewparagraph
-            
-            Data assimilation tries to get better estimates based on prior information and observations. Ensemble-based filter is one of the main approaches in atmospheric data assimilation, and many efforts have been devoted to seeking for better VOC estimates using ensemble-based filter(for example, \parencite{Tang_2011, Ma_2019, Xing_2020}). For lacking direct observations of VOC, the common approach is using other correlated observations (O\textsubscript{3} in most of studies) to update ICs/emissions of all VOC species via cross-variable assimilation. This kind of approach is convenient to realize, but the neglection of differences among VOC species could bring in extra errors. Also, this approach can hardly include other observations which show no obvious linear relations with overall VOC, since conducting cross-variable assimilation between variables with strong nonlinear relations could have negative effects on forecasts. (see, for example, \parencite{Tang_2016}) \\
-
-            \sepnewparagraph
-
-            This work tries to make a quantified selection for VOC species to be updated in assimilation system based on correlations/potential influence. The 2022 summer heat wave event in the Yangtze River Delta(YRD) region is selected to conduct real case experiment. This selection will respect the different chemical properties of VOC species, and can include more 'not so correlated' observations into assimilation system. The estimated emissions have been evaluated by launching series of 72h forecasts using WRF-Chem V3.6.1.
-    		
-    		
-    	\end{block}
-    	\end{column}
-
-	\end{columns}
-
-	\begin{columns}[t]
-		\separatorcolumn
-		
-		\begin{column}{\colwidth}
-			
-			\begin{block}{Methodology for emission estimation}
-				
-                To get estimated emissions, the scaling factor $\lambda$ is extended as part of WRF-Chem model state variables. The scaling factor is integrated using ensemble forecasts of chemical concentration produced by WRF-Chem. At each assimilation window, an EnSRF is performed to get scaling factor analysis $\lambda^a$, the estimated emission can then be calculated by multiplying prescribed emission $E^p$ with $\lambda^a$. The flow chat below describes this framework.  
- 
-                \begin{figure}
-                    \centerline{\includegraphics[width=30pc,angle=0,scale=2.5]{figure/Methodology.png}}
-                    \caption{(a) describe the framework to integrate scaling factor $\lambda$. (b) flow chart of the data assimilation system that simultaneously optimizes the chemical initial
-                    conditions and emissions.}\label{fig2}
-                \end{figure}
-
-                % After been integrated and assimilated, the estimated emission $E^a$ can now be calculated by prescribed emission $E^p$ and $\lambda^a$ as:
-                % \begin{equation}
-                %     E^a=\lambda^a*E^{p} 
-                % \end{equation}
-				
-			
-				
-			\end{block}
-
-            \begin{block}{System settings and Observation}
-                \begin{itemize}
-					\item \textbf{simulation model}: WRF-Chem version 3.6.1. The model domain, together with Yangtze River Delta(YRD) region are shown in \cref{fig1},  with a horizontal resolution of 18km. GOCART-RACM-KPP is selected as the aerosol-chemical scheme. 
-
-					\item \textbf{assimilation system}: Ensemble Square Root Filter(EnSRF), with forward operator taken from Gridpoint Statistical Interpolation(GSI). 
-                    \sepnewparagraph
-					\item \textbf{meteorology observation}: NCEP GDAS. All in situ observations and cloud motion vectors are assimilated every 6 hours. 
-     
-					\item \textbf{surface chemical observation}: MEE in-situ observation of $PM_{2.5}, PM_{10}, SO_2, NO_2, O_3, CO$. A subset of 560 stations is selected to be assimilated, in order to avoid correlated observations. There are 95 validation station in YRD region. Details of station distribution can be seen in \cref{fig1}.
-     
-
-     
-				\end{itemize}
-                \begin{figure}
-                    \centerline{\includegraphics[width=0.9\colwidth,angle=0]{figure/domain_station_split.pdf}}
-                    \caption{Domain setting and station distribution. The left subplot shows model domain in WRF-Chem, the shading indicates the terrain height. Red rots represent assimilation stations, and green triangles are validation stations in Yangtze River Delta(YRD) region selected by the black polygon. The right subplot shows more detailed station distribution in YRD region.  }\label{fig1}
-                \end{figure}
-
-			\end{block}
-   
-			\begin{block}{Quantified selection for VOC species}
-
-				
-
-                \begin{wrapfigure}{c}{0.72\colwidth}
-
-                    \centerline{\includegraphics[width=0.7\colwidth,angle=0]{figure/VOC_factor_domainavg.pdf}}                  
-
-                    \caption{Normalized VOC factor for each observation kind. VOCs with a red name will be included in our assimilation system.}   
-                    \label{fig_voc_factor}
-                \end{wrapfigure}
-
-                \RaggedRight
-                A quantified standard will make it clear to decide which VOC species should be updated by observations. Here, we propose a VOC factor to quantify which VOC species should be included in the assimilation system. The VOC factor considers two parts:
-                \sepnewparagraph
-                \begin{itemize}
-                    \item The correlation between observation and VOC species.
-                    \item The potential influence of updating VOC species on other variables.
-                \end{itemize}
-                \sepnewparagraph
-                A 50-member ensemble of free forecasts without any assimilation is conducted from 2022-07-10:00 to 2022-08-10:00 to calculate the VOC factor(also provide spin-up IC for cycling assimilation). The potential influence of updating a VOC species is roughly quantified by prescribed emission and average concentration during free forecast period. More details can be found by scan the QR code in Appendix.
-
-			\end{block}
-
-		\end{column}
-	
-		\separatorcolumn
-		
-		\begin{column}{\colwidth}
-			
-			\begin{block}{Experiment design}
-               Four experiments are designed to explore the effects of VOC selection for emission estimates: \texttt{NOVOC, O\textsubscript{3}\_AllVOC, O\textsubscript{3}\_CSVOC, AllOBS\_CSVOC}. \\
-               
-               \sepnewparagraph
-               
-               A cycling assimilation system is launched for each experiment from 2022-07-20:00 to 2022-07-30:00. The assimilation cycle period is 6h for meteorology variables and 1h for chemical variables/scaling factors. The meteorology variables and six main pollutions, together with their corresponding scaling factors, will be updated in all experiments, which is the same in \parencite{Peng_2020}. The difference between four experiments is the strategy to update VOC species, which is shown in the table below. \\
-
-                \begin{table}[t]
-
-                    \begin{center}
-                    \begin{tabular}{l@{\hskip 2\sepwidth}l@{\hskip 2\sepwidth}l}
-                    \hline
-                    \hline
-                    \vspace{0.5em}
-                    \textbf{Experiment} & \textbf{Observation} & \textbf{VOC species to be updated} \\
-                    \vspace{0.5em}
-                    NOVOC & N/A & N/A \\
-                    \vspace{0.5em}
-                    O\textsubscript{3}\_AllVOC & O\textsubscript{3} & All VOC species \\
-                    \vspace{0.5em}
-                    O\textsubscript{3}\_CSVOC & O\textsubscript{3} & KET/HCHO/OLI \\
-                    AllOBS\_CSVOC & O\textsubscript{3} & KET/HCHO/OLI \\
-                     & PM\textsubscript{2.5} & KET/HCHO/OLI \\
-                     & NO\textsubscript{2} & KET/HCHO/TOL/ALD/HC8/HC5 \\
-                     & CO & KET/HCHO/TOL/ALD \\
-                    \hline
-                    \end{tabular}
+    \begin{frame}[t]
+    	\begin{columns}
+        	\begin{column}{2\colwidth+\sepwidth}
+                \begin{block}{Introduction}
+                    \centering
+                        \begin{minipage}[t]{0.98\textwidth}
+                             Paleoclimate data assimilation (PDA) combines information from climate simulations and proxy data to provide an optimal estimate of the past climate. Due to the tremendous computational cost required by lone-time simulations of an Earth system model, PDA has been traditionally performed in an offline scenario, in which priors are selected from existing paleoclimate simulations.
+                            
+                            \sepnewparagraph
+                            
+                            Currently, deep learning-based networks have been promptly developed, which are data-driven and computationally efficient after trained, and thus provide an alternative for online PDA. The deep learning-based network along with an integrated hybrid ensemble Kalman filter is proposed as an online PDA here. This online PDA can efficiently provide climate forecasts with predictive skills and effectively assimilate sparse proxy data, leading to well reconstructed surface air temperature.
+                        \end{minipage}          		  		
+            	\end{block}
+        	\end{column}
+    	\end{columns}
+    
+    	\begin{columns}[t]
+    		\separatorcolumn		
+    		\begin{column}{\colwidth}
+    			
+    			\begin{block}{Surrogate models}
+    				\begin{itemize}
+    				    \item \textbf{Linear regression model}: The linear inverse model (LIM, \cite{penland_optimal-growth_1995}) is a linear Markov process that represents the evolution of a dynamic system. The model state at $t$ mapped from the model state at $t-1$ is given by
+                        \begin{equation}
+                            {\bf{x}}_t^{} = {{\bf{M}}_{LIM}}{\bf{x}}_{t - 1}^{} + {\sigma _{t - 1}}
+                        \end{equation}
+                        where the linear operator matrix ${{\bf{M}}_{LIM}}$ is given by the regression of covariance matrices of the state vectors with time lags of 0 and 1 in the empirical orthogonal function (EOF) space.
+                        \item \textbf{Deep learning-based network}: A deep learning-based network (NET) is built to map the model state at $t-1$ to that at $t$, which is a convolutional decoder-encoder (\cref{fig1}).The input and output are three-dimensional state variables, which contain augmented state variables of annual mean and six seasonal averages that are required by the proxy system models (PSMs)
+                        \begin{equation}
+                            {\bf{x}}_t^{} = {M_{NET}}\left( {{\bf{x}}_{t - 1}^{}} \right)   
+                        \end{equation}
+    				\end{itemize}
                     
-                    \end{center}
-                    \caption{Description of VOC selections for each experiment. The VOC species and corresponding scaling factors in the 3rd column will be updated by observations in the 2nd column.}\label{tab_voc}
-                    
-                \end{table}
-                
-               Since there is no direct emission observations, the estimated emissions will be evaluated by launching series of 72h forecasts. Starting at 2022-07-22:00, every 6h a deterministic forecast is launched with ensemble mean of cycling analysis as IC and emission estimates of last day as emission input. \\
-               \sepnewparagraph
-               It should be noted that all kinds of chemical observations have already been used to update their corresponding state variables, thus no new observation is introduced into assimilation system to update VOC species.
-
-			\end{block}
-
-			\begin{alertblock}{Emission estimates}
-                \begin{figure}
-                \begin{minipage}[c]{0.8\textwidth}
-                    \includegraphics[width=\textwidth]{figure/emiss_ts_diurnal_witho3.pdf}
-                \end{minipage}
-                \hfill
-                 \begin{minipage}[c]{0.18\textwidth}
-                    \RaggedRight
-                    \caption{The left subplot shows time series of overall VOC emission estimates in each experiment. The right subplot presents diurnal-variation of overall VOC emission estimates in left y-axis, and diurnal-variation of O\textsubscript{3} observation  in right y-axis.}\label{fig_emiss_ts}                     
-                 \end{minipage}   
-
-                    
-                \end{figure}
-                
-                \begin{itemize}
-                    \item O\textsubscript{3}\_AllVOC estimates have an obvious diurnal variation, but show a suspicious drop in UTC00-UTC03.
-                    \item O\textsubscript{3}\_CSVOC estimates fix the suspicious drop in UTC00-UTC03, but present little diurnal variation. This is because only 3 VOC emissions are updated in this experiment, others remain unchanged compared to the prescribed emissions.
-                    \item AllOBS\_CSVOC estimates also show an obvious diurnal variation, with a constant peak in daytime. This variation in daytime is similar to the YRD averaged O\textsubscript{3} observation. As important precursors of O\textsubscript{3}, this peak in daytime could help the model to overcome the underestimation  of O\textsubscript{3}, as show in in \cref{fcst_result}.
-                \end{itemize}
-
-			\end{alertblock}
-
-			\begin{alertblock}{72H O\textsubscript{3}/PM\textsubscript{2.5} forecast results}
-                % \begin{minipage}{0.7\colwidth}
-                % \begin{figure}
-                %     \begin{minipage}[c]{0.7\textwidth}
-                %         % \centerline{\includegraphics[width=0.7\colwidth,angle=0]{figure/fcst72h_00_6hcycle_nocorr.pdf}}
-                %         \includegraphics[width=0.7\colwidth,angle=0]{figure/fcst72h_00_6hcycle_nocorr.pdf}
-                %     \end{minipage}
-                %     \hfill
-                %     \begin{minipage}[c]{0.3\textwidth}
-                %     \caption{Averaged RMSE/BIAS value for O\textsubscript{3}(1st column) and PM\textsubscript{2.5}(2nd column). The bars on the rightside in each subplot represent the mean value . Units for all this variables: $\mu g/m^3$}                    
-                %     \end{minipage}
-                %     \label{fcst_result}    
-                % \end{figure}
-                % \end{minipage}
-
-                \begin{figure}
-                  \begin{minipage}[c]{0.8\textwidth}
-                    \includegraphics[width=\textwidth]{figure/fcst72h_00_6hcycle_nocorr.pdf}
-                  \end{minipage}\hfill
-                  \begin{minipage}[c]{0.18\textwidth}
-                    \caption{Averaged RMSE/BIAS value for O\textsubscript{3}(1st column) and PM\textsubscript{2.5}(2nd column). The bars on the rightside in each subplot represent the mean value . Units for all this variables: $\mu g/m^3$}    
-                    \label{fcst_result}
-                  \end{minipage}
-                \end{figure}
-                
-                \begin{itemize}
-                    \item O\textsubscript{3}\_AllVOC(yellow) shows little RMSE/BIAS improvements for O\textsubscript{3} and PM\textsubscript{2.5} forecasts compared with NOVOC(black). 
-                    \item O\textsubscript{3}\_CSVOC(green) has obvious improvements in PM\textsubscript{2.5} RMSE/BIAS, but failed to improve O\textsubscript{3} forecasts.
-                    
-                    \item AllOBS\_CSVOC shows advantage for both O\textsubscript{3} and PM\textsubscript{2.5} forecasts, especially in reducing O\textsubscript{3} BIAS. Possibly because AllOBS\_CSVOC estimates have a constant peak in daytime, which compensates for the underestimation of O\textsubscript{3} and serves as a model error correction.
-                \end{itemize}
-			\end{alertblock}
-   
-			\begin{block}{}
-			    \begin{figure}
-                   \begin{minipage}[c]{0.24\colwidth}
-                       \includegraphics[height=6em]{logos/aerss_logo.png}
-                   \end{minipage}
-                   \begin{minipage}[c]{0.24\colwidth}
-                       \textbf{Reference: }\\
-                       \includegraphics[height=6em]{logos/Reference.png}
-                   \end{minipage}
-                   \begin{minipage}[c]{0.24\colwidth}
-                       \textbf{VOC factor details: }\\
-                       \includegraphics[height=6em]{logos/vocfactor_detail.png}
-                   \end{minipage}
-                   \begin{minipage}[c]{0.24\colwidth}
-                       \textbf{Poster source code:}\\
-                       \includegraphics[height=6em]{logos/source_code.png}
-                   \end{minipage}
-                \end{figure}
-
-			\end{block}
-			
-		\end{column}
-		
-		\separatorcolumn
-	\end{columns}
-\end{frame}
+                    \begin{figure}
+                        \begin{minipage}[t]{0.8\textwidth}
+                            \centerline{\includegraphics[width=1\textwidth]{figure/Figure1.pdf}}
+                            \caption{Architecture of the convolutional decoder-encoder network. The encoder comprises one input layer, three convolutional layers (ConV), followed by three upsample-convolutional layers for the decoder. The activation layer is denoted by a darker orange shading.}\label{fig1}
+                        \end{minipage}
+                    \end{figure}						
+    			\end{block}
+    
+                \begin{block}{Data assimilation methods}
+                    \begin{itemize}
+    					\item \textbf{Offline data assimilation}: The offline EnKF \parencite{hakim_last_2016} is used as a benchmark. Ensemble priors $\mathbf{x}^f$ are randomly sampled from a climatological simulation. The ensemble-square root filter (EnSRF), as a deterministic filter, updates the ensemble mean and ensemble perturbations separately.
+                        \begin{equation}
+                            {{\bf{\bar x}}^a} = {{\bf{\bar x}}^f}{\rm{ + }}{{\bf{P}}^f}{{\bf{H}}^{\rm T}}{\left[ {{\bf{H}}{{\bf{P}}^f}{{\bf{H}}^{\rm T}} + {\bf{R}}} \right]^{ - 1}}\left[ {{\bf{y}} - H\left( {{{{\bf{\bar x}}}^f}} \right)} \right]
+                        \end{equation}
+                        \begin{equation}
+                            {\bf{x'}}_i^a = {\bf{x'}}_i^f - {{\bf{P}}^f}{{\bf{H}}^{\rm T}}{\left[ {{{\left( {\sqrt {{\bf{H}}{{\bf{P}}^f}{{\bf{H}}^{\rm T}} + {\bf{R}}} } \right)}^{ - 1}}} \right]^{\rm T}}{\left[ {\sqrt {{\bf{H}}{{\bf{P}}^f}{{\bf{H}}^{\rm T}} + {\bf{R}}}  + \sqrt {\bf{R}} } \right]^{ - 1}}\left( {{\bf{Hx'}}_i^f} \right)
+                        \end{equation}
+    
+    					\item \textbf{Online data assimilation}: Ensemble priors $\mathbf{x}_{cyc}^f$ of online DA  are short-term forecasts based on the surrogate models. Ensemble mean and ensemble perturbations are updated separately by the hybrid background error covariances through integrated hybrid EnKF (IHEnKF, \cite{lei_integrated_2021}). The hybrid background error covariances ${\bf{P}}_{hyb}^f$ are a combination of the flow-dependent background error covariances ${\bf{P}}_{cyc}^f$ and the static background error covariances ${\bf{P}}_{climo}^f$, with weights $\alpha$ and $1-\alpha$ respectively.
+                         \begin{equation}
+                            {\bf{\bar x}}_{cyc}^a = {\bf{\bar x}}_{cyc}^f{\rm{ + }}{\bf{P}}_{hyb}^f{{\bf{H}}^{\rm T}}{\left[ {{\bf{HP}}_{hyb}^f{{\bf{H}}^{\rm T}} + {\bf{R}}} \right]^{ - 1}}\left[ {{\bf{y}} - H\left( {{\bf{\bar x}}_{cyc}^f} \right)} \right]
+                        \end{equation}
+                        \begin{equation}
+                            {\bf{x'}}_{cyc,i}^a = {\bf{x'}}_{cyc,i}^f - {\bf{P}}_{hyb}^f{{\bf{H}}^{\rm T}}{\left[ {{{\left( {\sqrt {{\bf{HP}}_{hyb}^f{{\bf{H}}^{\rm T}} + {\bf{R}}} } \right)}^{ - 1}}} \right]^{\rm T}}{\left[ {\sqrt {{\bf{HP}}_{hyb}^f{{\bf{H}}^{\rm T}} + {\bf{R}}}  + \sqrt {\bf{R}} } \right]^{ - 1}}\left( {{\bf{Hx'}}_{cyc,i}^f} \right)
+                        \end{equation}
+                        Since the surrogate model tends to lost ensemble variances along with lead times, a blended prior is adopted \parencite{perkins_reconstructing_2017}. The selected climatological $\mathbf{x}_{\rm{climo}}^f$ or analog priors $\mathbf{x}_{\rm{analog}}^f$ can be added to the ensemble priors $\mathbf{x}_{cyc}^f$ with coefficient $\beta$:
+                        \begin{equation}
+                            {\bf{x}}_{cyc,i}^f = \beta M\left( {{\bf{x}}_{cyc,i}^a} \right) + \left( {1 - \beta } \right){\bf{x}}_{i}^f
+                        \end{equation}
+    				\end{itemize}
+    			\end{block}
+       
+    			\begin{block}{Experimental design}			
+                    \begin{itemize}
+                        \item \textbf{Proxy and simulation data}: The proxy records from the PAGES 2k Consortium \parencite{pages2k_consortium_global_2017} that are temperature sensitive are assimilated, with temporal coverage of the Common Era (0-2000CE). The maximum number of proxies in 1945 CE is 554 (\cref{fig2}).
+                        \item \textbf{Pseudoproxy and real proxy experiments}: Pseudoproxy data is generated by adding random error from a normal distribution to the true observed value; Real proxies from PAGES 2k are further utilized; Six different proxy networks with 50, 150, 250, 350, 450, and the full proxies are tested.  
+                        \item \textbf{Evaluation metrics}: Root-mean square error (RMSE) and coefficient of efficiency (CE) are computed.        
+                    \end{itemize}
+    
+                    \begin{figure}
+                        \begin{minipage}[t]{0.8\textwidth}
+                            \centerline{\includegraphics[width=0.625\textwidth]{figure/Figure2.png}}
+                            \caption{Spatial distributions of proxy records in 1945 CE with colors indicating the signal-to-noise ratio}\label{fig2}
+                        \end{minipage}
+                    \end{figure}	
+    			\end{block}
+    
+    		\end{column}	
+    		\separatorcolumn	
+    		\begin{column}{\colwidth}
+    			
+    			\begin{alertblock}{Predictive skills of surrogate models}
+                    \begin{itemize}
+                        \item Compared to the offline sampling, LIM has improved predictive skills within five years, and the shorter the lead time the better the predictive skill.
+                        \item Compared to the LIM, the NET generally further improves the predictive skills.
+                    \end{itemize}
+                    \begin{figure}
+                        \begin{minipage}[t]{0.8\textwidth}
+                            \centerline{\includegraphics[width=0.49\textwidth]{figure/Figure3.eps}}
+                            \caption{Spatially and temporally averaged RMSEs for climatology, LIM, and NET at various forecast lead times (years)}\label{fig3}
+                        \end{minipage}
+                    \end{figure}	
+    			\end{alertblock}
+    
+    			\begin{alertblock}{Results from pseudoproxy experiments}
+                    \begin{itemize}            
+                        \item Exp\_LIM and Exp\_NET have larger CEs than Exp\_OFF, which indicates improved reconstruction skills from the online DA with surrogate models than the offline DA.
+                        \item  Compared to Exp\_LIM, Exp\_NET obtains larger CEs of priors and posteriors, the improved predictive skills contributed by the NET than the LIM are beneficial for online DA.
+                        \item  The differences between Exp\_LIM and Exp\_NET are enlarged with sparse proxy data.
+                    \end{itemize}
+                    \begin{figure}
+                        \begin{minipage}[t]{0.8\textwidth}
+                            \centering
+                            \begin{minipage}[t]{0.49\textwidth}
+                                \begin{tikzpicture}
+                                    \node[anchor=north west] at (0,0) {\includegraphics[width=\textwidth]{figure/Figure4a.eps}};   
+                                    \node[anchor=north west, fill=white, text=black, font=\bfseries] at (0.01, 0.01) {(a)};
+                                \end{tikzpicture}
+                            \end{minipage}
+                            \begin{minipage}[t]{0.49\textwidth}
+                                \begin{tikzpicture}
+                                    \node[anchor=north west] at (0,0) {\includegraphics[width=\textwidth]{figure/Figure4a.eps}};   
+                                    \node[anchor=north west, fill=white, text=black, font=\bfseries] at (0.01, 0.01) {(b)};
+                                \end{tikzpicture}
+                            \end{minipage}    
+                            \caption{Area-weighted global averaged CEs for Exp\_OFF, Exp\_LIM, and Exp\_NET with varying hybrid weights / blending weights, assimilating a proxy network with (a) 150 pseudoproxies and (b) full pseudoproxies.}\label{fig4}
+                        \end{minipage}
+                    \end{figure}
+    			\end{alertblock}
+    
+    			\begin{alertblock}{Results from real proxy experiments}
+                    \begin{itemize}
+                        \item When a full set of proxy data is used, offline DA and online DA with either LIM or NET have similar GMT reconstructions, which are mainly forced by the proxy information.
+                        \item When a limited set of proxies is used, Exp\_OFF has reduced GMT variability than Exp\_LIM and Exp\_NETANA.   
+                        \item Compared to Exp\_LIM with linear predictive skills obtained by the LIM, Exp\_NETANA benefits from retaining nonlinear dynamics provided by the NET and further incorporating analog climatological ensembles, which leads to improved GMT reconstruction even with limited proxies.
+                    \end{itemize}
+                    \begin{figure}
+                        \begin{minipage}[t]{0.8\textwidth}
+                            \centering
+                            \begin{minipage}[t]{0.49\textwidth}
+                                \begin{tikzpicture}
+                                    \node[anchor=north west] at (0,0) {\includegraphics[width=\textwidth]{figure/Figure5a.eps}};   
+                                    \node[anchor=north west, fill=white, text=black, font=\bfseries] at (0.01, 0.01) {(a)};
+                                \end{tikzpicture}
+                            \end{minipage}
+                            \begin{minipage}[t]{0.49\textwidth}
+                                \begin{tikzpicture}
+                                    \node[anchor=north west] at (0,0) {\includegraphics[width=\textwidth]{figure/Figure5b.eps}};   
+                                    \node[anchor=north west, fill=white, text=black, font=\bfseries] at (0.01, 0.01) {(b)};
+                                \end{tikzpicture}
+                            \end{minipage}    
+                            \caption{The reconstruction of GMTs over the instrumental period for Exp\_OFF, Exp\_LIM, and Exp\_NETANA given a hybrid weight / blending weight of 0.7, assimilating a proxy network with (a) 150 proxies and (b) full proxies.}
+                            \label{fig5}
+                        \end{minipage}
+                    \end{figure}
+                    \begin{itemize}
+                        \item The GMT reconstruction provided by the online PDA has smaller spread but more consistent error statistics than those provided by the online PDA with LIM and offline PDA, during the early period with limited proxy data.
+                    \end{itemize}
+                    \begin{figure}
+                        \begin{minipage}[t]{0.8\textwidth}
+                            \centerline{\includegraphics[width=1\textwidth]{figure/Figure6.eps}}
+                            \caption{The reconstruction of GMTs over the Common Era for Exp\_OFF, Exp\_LIM, and Exp\_NETANA, given a hybrid weight / blending weight of 0.7, assimilating a proxy network with full proxies. The vertical grey lines denote the volcanic eruption years.}\label{fig6}
+                        \end{minipage}
+                    \end{figure}
+    			\end{alertblock}
+    			
+    		\end{column}		
+    		\separatorcolumn
+    	\end{columns}
+    \end{frame}
 \end{document}
