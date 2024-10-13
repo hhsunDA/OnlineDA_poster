@@ -44,6 +44,9 @@
 \newcommand{\separatorcolumn}{\begin{column}{\sepwidth}\end{column}}
 \newcommand{\sepnewparagraph}{\vspace{\sepparagraph}}
 
+% Define a new command for default color text
+\newcommand{\defaultcolor}[1]{\textcolor{mydefault}{#1}}
+
 % ====================
 % Logo (optional)
 % ====================
@@ -75,14 +78,14 @@
 \addbibresource{DA_theory.bib}
 \renewcommand{\pgfuseimage}[1]{\includegraphics[scale=2]{#1}}
 
-\title{An Online Paleoclimate Data Assimilation with a Deep Learning-based Network}
+\title{\textcolor{white}{An Online Paleoclimate Data Assimilation} {with a Deep Learning-based Network}}
 
-\author{Haohao Sun \inst{1} \and Lili Lei \inst{1} \and Zhengyu Liu \inst{2} \and Liang Ning \inst{3} \and Zhe-Min Tan \inst{1}}
+\author{\textcolor{white}{Haohao Sun \inst{1}} \and \textcolor{white}{Lili Lei \inst{1}} \and \textcolor{white}{Zhengyu Liu \inst{2}} \and \textcolor{white}{Liang Ning \inst{3}} \and \textcolor{white}{Zhe-Min Tan \inst{1}}}
 
 \institute[shortinst]{
-    \inst{1} School of Atmospheric Sciences, Nanjing University, Nanjing \\
-    \inst{2} Department of Geography, The Ohio State University, Columbus, Ohio \\
-    \inst{3} School of Geography, Nanjing Normal University, Nanjing
+    \textcolor{white}{\inst{1} School of Atmospheric Sciences, Nanjing University, Nanjing} \\
+    \textcolor{white}{\inst{2} Department of Geography, The Ohio State University, Columbus, Ohio} \\
+    \textcolor{white}{\inst{3} School of Geography, Nanjing Normal University, Nanjing}
 }
 
 \date{October 17, 2024}
